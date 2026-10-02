@@ -1,0 +1,36 @@
+{
+  "pairs": "/home/zeynel.yildirim/Mimosa/experiments/cross_eval/pairs_A_test_unseen_pair_sample4000.tsv",
+  "model": "/home/zeynel.yildirim/Mimosa/training/model_mimosa.pth",
+  "stepsize": 5,
+  "rows_total": 4000,
+  "rows_processable": 4000,
+  "rows_predicted": 4000,
+  "subset_processable_only": {
+    "n": 4000,
+    "tn": 181,
+    "fp": 1819,
+    "fn": 186,
+    "tp": 1814,
+    "accuracy": 0.49875,
+    "ppv": 0.4993118634737132,
+    "ap_paper_ppv": 0.4993758601706579,
+    "recall": 0.907,
+    "specificity": 0.0905,
+    "f1": 0.6440617788034795,
+    "npv": 0.49318801089918257
+  },
+  "full_set_unprocessable_as_negative": {
+    "n": 4000,
+    "tn": 181,
+    "fp": 1819,
+    "fn": 186,
+    "tp": 1814,
+    "accuracy": 0.49875,
+    "ppv": 0.4993118634737132,
+    "ap_paper_ppv": 0.4993758601706579,
+    "recall": 0.907,
+    "specificity": 0.0905,
+    "f1": 0.6440617788034795,
+    "npv": 0.49318801089918257
+  }
+}

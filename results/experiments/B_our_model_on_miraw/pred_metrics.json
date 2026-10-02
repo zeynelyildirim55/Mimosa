@@ -1,0 +1,36 @@
+{
+  "pairs": "/home/zeynel.yildirim/Mimosa/experiments/cross_eval/pairs_B_miraw_unique.tsv",
+  "model": "/home/zeynel.yildirim/Mimosa/runs/site40_long/model_concate_112.pth",
+  "stepsize": 5,
+  "rows_total": 5927,
+  "rows_processable": 5927,
+  "rows_predicted": 5927,
+  "subset_processable_only": {
+    "n": 5927,
+    "tn": 72,
+    "fp": 476,
+    "fn": 571,
+    "tp": 4808,
+    "accuracy": 0.8233507676733592,
+    "ppv": 0.9099167297501892,
+    "ap_paper_ppv": 0.9096646180496537,
+    "recall": 0.8938464398587098,
+    "specificity": 0.13138686131386862,
+    "f1": 0.901809997186533,
+    "npv": 0.1119751166407465
+  },
+  "full_set_unprocessable_as_negative": {
+    "n": 5927,
+    "tn": 72,
+    "fp": 476,
+    "fn": 571,
+    "tp": 4808,
+    "accuracy": 0.8233507676733592,
+    "ppv": 0.9099167297501892,
+    "ap_paper_ppv": 0.9096646180496537,
+    "recall": 0.8938464398587098,
+    "specificity": 0.13138686131386862,
+    "f1": 0.901809997186533,
+    "npv": 0.1119751166407465
+  }
+}
