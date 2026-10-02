@@ -25,7 +25,7 @@ S = {
     'sub': ParagraphStyle('sub', fontName='DV', fontSize=8.5, leading=11, textColor=MUTED, spaceAfter=6),
     'h1': ParagraphStyle('h1', keepWithNext=1, fontName='DVB', fontSize=11.5, leading=14, textColor=INK, spaceBefore=7, spaceAfter=3),
     'h2': ParagraphStyle('h2', keepWithNext=1, fontName='DVB', fontSize=9.5, leading=12, textColor=INK, spaceBefore=4, spaceAfter=2),
-    'p': ParagraphStyle('p', fontName='DV', fontSize=8.4, leading=11, textColor=INK, spaceAfter=3, alignment=TA_LEFT),
+    'p': ParagraphStyle('p', allowWidows=0, fontName='DV', fontSize=8.4, leading=11, textColor=INK, spaceAfter=3, alignment=TA_LEFT),
     'b': ParagraphStyle('b', fontName='DV', fontSize=8.4, leading=11, textColor=INK, leftIndent=11, bulletIndent=2, spaceAfter=1),
     'cell': ParagraphStyle('cell', fontName='DV', fontSize=7.3, leading=8.9, textColor=INK),
     'cellb': ParagraphStyle('cellb', fontName='DVB', fontSize=7.3, leading=8.9, textColor=INK),
@@ -67,12 +67,12 @@ def table(rows, widths, header=True, bold_rows=(), title=None):
 
 # ------------------------------------------------------------------------------------------
 story.append(Paragraph('Mimosa Reproduction', S['title']))
-story.append(Paragraph('Zeynel Yıldırım · September 2026', S['sub']))
+story.append(Paragraph('Zeynel Yıldırım and Bora Kafadar · September 2026', S['sub']))
 
 h1('1. Reproducing the paper')
 p(f'Mimosa (Bi et al., Nucleic Acids Research 52:11455, 2024). Released model {c("training/model_mimosa.pth")} on the '
   f'paper\'s test sets {c("data/miRAW_Test0–9.txt")} (548 positive + 548 negative pairs each; the 548 negatives are '
-  f'identical in all 10 sets), step size 5. Logs: {c("logs/paper_reproduction/")}.')
+  f'identical in all 10 sets), step size 5.')
 table([
     ['', 'Accuracy', 'PPV', 'Recall', 'Specificity', 'F1', 'NPV'],
     ['Paper, Figure 3B (mean of 10 sets)', '0.7568', '0.6771', '0.9332', '0.5803', '0.7932', '0.8971'],
@@ -99,7 +99,7 @@ table(title='New files', rows=[
     ['Path', 'Purpose'],
     [c('training/prepare_dataset.py'), 'Builds our dataset files (Section 3)'],
     [c('training/predict_site40.py'), 'Gene-level test on our files by calling the authors\' get_cts / kmers_predict / '
-     'decision_for_whole; verified identical to the original perform_test on 100/100 miRAW Test0 pairs'],
+     'decision_for_whole'],
     [c('scripts/run_prepare.slurm, run_train_site40.slurm, run_predict_site40.slurm, run_mimosa_all.slurm'), 'Slurm jobs'],
     [c('experiments/cross_eval, window_analysis, composition'), 'Diagnostic experiments (Section 6)'],
 ], widths=[78, 100])
@@ -155,36 +155,28 @@ table(title='3.3 Where each prepared file is used (data/custom/)', rows=[
 # ------------------------------------------------------------------------------------------
 h1('4. Training')
 p('Original perform_train, unchanged, on site40_Train_Validation.txt (the paper trains on 58,793 miRAW sites). '
-  'Validation metrics are site-level.')
+  'Validation metrics are site-level. <b>The 120-epoch model was used for all tests.</b>')
 table([
-    ['Run', 'Time', 'Best epoch', 'Val loss', 'Acc', 'PPV', 'Recall', 'Spec', 'F1', 'NPV'],
-    ['40 epochs (paper)', '2 h 48 min', '40', '0.467', '0.843', '0.844', '0.882', '0.793', '0.862', '0.841'],
-    ['120 epochs', '8 h 54 min', '113', '0.454', '0.855', '0.845', '0.907', '0.790', '0.875', '0.870'],
-], [30, 20, 17, 16, 15, 15, 16, 15, 15, 15])
-note(f'Model files: {c("runs/site40/model_concate_39.pth")} (40 epochs) and '
-     f'{c("runs/site40_long/model_concate_112.pth")} (120 epochs; file numbers count epochs from 0).')
-p('The 40-epoch run was still improving at epoch 40; the 120-epoch run plateaued after ~80 epochs (train loss kept '
-  'falling, validation loss flat). <b>The 120-epoch model was used for all tests.</b>')
+    ['Run', 'Best epoch', 'Val loss', 'Acc', 'PPV', 'Recall', 'Spec', 'F1', 'NPV'],
+    ['40 epochs (paper)', '40', '0.467', '0.843', '0.844', '0.882', '0.793', '0.862', '0.841'],
+    ['120 epochs', '113', '0.454', '0.855', '0.845', '0.907', '0.790', '0.875', '0.870'],
+], [34, 20, 18, 16, 16, 18, 16, 16, 16])
 
 h1('5. Gene-level test')
 p('Procedure exactly as in the paper: target reversed to 3\'→5\', cut into 40-nt windows with step 5 (get_cts), every '
   'window scored with the authors\' features (kmers_predict), pair positive if any window scores above 0.5 '
   '(decision_for_whole).')
-note('Runtime-only change: kmers_predict is called inside torch.no_grad(), which cuts memory from 4.4 GB to 0.94 GB '
-     'per task on 4,076-nt targets; predictions are identical (checked on 100/100 pairs).')
+note('kmers_predict is called inside torch.no_grad() (saves memory only; predictions are unchanged).')
 table([
     ['Split', 'Rows', 'n', 'Acc', 'PPV', 'AP', 'Recall', 'Spec', 'F1', 'NPV'],
     ['test_unseen_pair', 'processable', '42,476', '0.514', '0.511', '0.510', '0.881', '0.141', '0.647', '0.537'],
-    ['', 'all rows', '44,580', '0.518', '0.511', '0.509', '0.847', '0.189', '0.637', '0.552'],
+    ['', 'all rows, unprocessable = negative', '44,580', '0.518', '0.511', '0.509', '0.847', '0.189', '0.637', '0.552'],
     ['test_unseen_source', 'processable', '379,727', '0.516', '0.512', '0.511', '0.881', '0.143', '0.648', '0.540'],
-    ['', 'all rows', '398,828', '0.520', '0.512', '0.510', '0.847', '0.193', '0.638', '0.558'],
+    ['', 'all rows, unprocessable = negative', '398,828', '0.520', '0.512', '0.510', '0.847', '0.193', '0.638', '0.558'],
     ['test_unseen_target', 'processable', '394,110', '0.512', '0.509', '0.508', '0.882', '0.136', '0.645', '0.530'],
-    ['', 'all rows', '415,348', '0.515', '0.509', '0.508', '0.843', '0.186', '0.635', '0.543'],
+    ['', 'all rows, unprocessable = negative', '415,348', '0.515', '0.509', '0.508', '0.843', '0.186', '0.635', '0.543'],
     ['Paper, miRAW', '10 × 1,096', '', '0.757', '0.690', '0.677', '0.933', '0.580', '0.793', '0.897'],
-], [34, 22, 17, 13, 13, 13, 14, 13, 13, 13], bold_rows=(7,))
-note(f'"all rows": unprocessable pairs counted as negative predictions; they are mostly negatives, which raises '
-     f'specificity slightly. Results: {c("results/site40_long/&lt;split&gt;/pred_metrics.json")} (metrics) and '
-     f'{c("pred.*.tsv")} (one row per pair).')
+], [32, 50, 16, 11, 11, 11, 12, 11, 11, 11], bold_rows=(7,))
 
 # ------------------------------------------------------------------------------------------
 h1('6. Diagnostic experiments')
@@ -271,6 +263,6 @@ def footer(canvas, doc):
 
 doc = SimpleDocTemplate(OUT, pagesize=A4, leftMargin=15 * mm, rightMargin=15 * mm, topMargin=12 * mm,
                         bottomMargin=14 * mm, title='Mimosa Reproduction',
-                        author='Zeynel Yıldırım')
+                        author='Zeynel Yıldırım and Bora Kafadar')
 doc.build(story, onFirstPage=footer, onLaterPages=footer)
 print('wrote', OUT)
