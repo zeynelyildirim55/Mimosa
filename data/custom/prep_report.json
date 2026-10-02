@@ -1,0 +1,166 @@
+{
+  "args": {
+    "chunks_dir": "/home/zeynel.yildirim/training_chunks",
+    "eval_dir": "/home/zeynel.yildirim/data_with_negatives/rna_rna/miRNA_mRNA",
+    "fasta_zip": "/home/zeynel.yildirim/fasta_files.zip",
+    "out_dir": "/home/zeynel.yildirim/Mimosa/data/custom",
+    "val_frac": 0.07,
+    "seed": 42,
+    "min_mirna_len": 10,
+    "max_mirna_len": 30,
+    "limit": 0
+  },
+  "train": {
+    "lines": 34560002,
+    "mirna_mrna_rows": 11987208,
+    "unique_rows": 2761271,
+    "dropped": {
+      "mirna_not_found": 78345,
+      "target_not_found": 51556,
+      "mirna_length": 30147,
+      "target_non_acgu": 1751,
+      "target_shorter_than_40": 333
+    },
+    "kept_rows": 2599139,
+    "dropped_overlap_with_eval": 0
+  },
+  "valid_unseen_pair": {
+    "lines": 12200,
+    "mirna_mrna_rows": 12200,
+    "non_mirna_mrna_lines": 0,
+    "status": {
+      "label=0|mirna_length": 41,
+      "label=0|mirna_not_found": 276,
+      "label=0|ok": 5526,
+      "label=0|target_non_acgu": 3,
+      "label=0|target_not_found": 254,
+      "label=1|mirna_length": 37,
+      "label=1|mirna_not_found": 227,
+      "label=1|ok": 5755,
+      "label=1|target_non_acgu": 2,
+      "label=1|target_not_found": 79
+    },
+    "ok_rows": 11281,
+    "ok_fraction": 0.9247,
+    "duplicate_rows": 26,
+    "pairs_with_both_labels": 0
+  },
+  "valid_unseen_source": {
+    "lines": 206056,
+    "mirna_mrna_rows": 206056,
+    "non_mirna_mrna_lines": 0,
+    "status": {
+      "label=0|mirna_length": 671,
+      "label=0|mirna_not_found": 4457,
+      "label=0|ok": 93808,
+      "label=0|target_non_acgu": 62,
+      "label=0|target_not_found": 4030,
+      "label=1|mirna_length": 564,
+      "label=1|mirna_not_found": 3769,
+      "label=1|ok": 97348,
+      "label=1|target_non_acgu": 73,
+      "label=1|target_not_found": 1274
+    },
+    "ok_rows": 191156,
+    "ok_fraction": 0.9277,
+    "duplicate_rows": 377,
+    "pairs_with_both_labels": 0
+  },
+  "valid_unseen_target": {
+    "lines": 189364,
+    "mirna_mrna_rows": 189364,
+    "non_mirna_mrna_lines": 0,
+    "status": {
+      "label=0|mirna_length": 961,
+      "label=0|mirna_not_found": 2208,
+      "label=0|ok": 89141,
+      "label=0|target_non_acgu": 11,
+      "label=0|target_not_found": 2361,
+      "label=1|mirna_length": 976,
+      "label=1|mirna_not_found": 2173,
+      "label=1|ok": 90519,
+      "label=1|target_non_acgu": 18,
+      "label=1|target_not_found": 996
+    },
+    "ok_rows": 179660,
+    "ok_fraction": 0.9488,
+    "duplicate_rows": 321,
+    "pairs_with_both_labels": 0
+  },
+  "test_unseen_pair": {
+    "lines": 44580,
+    "mirna_mrna_rows": 44580,
+    "non_mirna_mrna_lines": 0,
+    "status": {
+      "label=0|mirna_length": 93,
+      "label=0|mirna_not_found": 541,
+      "label=0|ok": 21043,
+      "label=0|target_non_acgu": 9,
+      "label=0|target_not_found": 604,
+      "label=1|mirna_length": 91,
+      "label=1|mirna_not_found": 526,
+      "label=1|ok": 21433,
+      "label=1|target_non_acgu": 8,
+      "label=1|target_not_found": 232
+    },
+    "ok_rows": 42476,
+    "ok_fraction": 0.9528,
+    "duplicate_rows": 88,
+    "pairs_with_both_labels": 0
+  },
+  "test_unseen_source": {
+    "lines": 398828,
+    "mirna_mrna_rows": 398828,
+    "non_mirna_mrna_lines": 0,
+    "status": {
+      "label=0|mirna_length": 877,
+      "label=0|mirna_not_found": 4813,
+      "label=0|ok": 187903,
+      "label=0|target_non_acgu": 139,
+      "label=0|target_not_found": 5682,
+      "label=1|mirna_length": 876,
+      "label=1|mirna_not_found": 4635,
+      "label=1|ok": 191824,
+      "label=1|target_non_acgu": 151,
+      "label=1|target_not_found": 1928
+    },
+    "ok_rows": 379727,
+    "ok_fraction": 0.9521,
+    "duplicate_rows": 747,
+    "pairs_with_both_labels": 0
+  },
+  "test_unseen_target": {
+    "lines": 415348,
+    "mirna_mrna_rows": 415348,
+    "non_mirna_mrna_lines": 0,
+    "status": {
+      "label=0|mirna_length": 2116,
+      "label=0|mirna_not_found": 5115,
+      "label=0|ok": 195483,
+      "label=0|target_non_acgu": 101,
+      "label=0|target_not_found": 4859,
+      "label=1|mirna_length": 2127,
+      "label=1|mirna_not_found": 4805,
+      "label=1|ok": 198627,
+      "label=1|target_non_acgu": 113,
+      "label=1|target_not_found": 2002
+    },
+    "ok_rows": 394110,
+    "ok_fraction": 0.9489,
+    "duplicate_rows": 769,
+    "pairs_with_both_labels": 0
+  },
+  "ids_needed": 200881,
+  "ids_resolved": 145740,
+  "train_summary": {
+    "train|label=0|gene": 1178878,
+    "train|label=0|site40": 16339,
+    "train|label=1|gene": 1201335,
+    "train|label=1|site40": 20647,
+    "val|label=0|gene": 88733,
+    "val|label=0|site40": 1230,
+    "val|label=1|gene": 90423,
+    "val|label=1|site40": 1554
+  },
+  "sequences_written": 168646
+}
