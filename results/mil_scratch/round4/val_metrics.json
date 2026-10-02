@@ -1,0 +1,18 @@
+{
+  "selection_dir": "/home/zeynel.yildirim/Mimosa/runs/mil_scratch/round4/val_selection",
+  "pairs_scored": 20216,
+  "processable": {
+    "n": 20216,
+    "tn": 7340,
+    "fp": 2728,
+    "fn": 2678,
+    "tp": 7470,
+    "accuracy": 0.7325880490700435,
+    "ppv": 0.7324965679545009,
+    "ap_paper_ppv": 0.6716641836686079,
+    "recall": 0.7361056365786361,
+    "specificity": 0.7290425109257052,
+    "f1": 0.7342966676496608,
+    "npv": 0.7326811738870034
+  }
+}
