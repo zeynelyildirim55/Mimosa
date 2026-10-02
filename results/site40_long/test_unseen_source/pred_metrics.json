@@ -1,0 +1,36 @@
+{
+  "pairs": "/home/zeynel.yildirim/Mimosa/data/custom/pairs_test_unseen_source.tsv",
+  "model": "/home/zeynel.yildirim/Mimosa/runs/site40_long/model_concate_112.pth",
+  "stepsize": 5,
+  "rows_total": 398828,
+  "rows_processable": 379727,
+  "rows_predicted": 379727,
+  "subset_processable_only": {
+    "n": 379727,
+    "tn": 26893,
+    "fp": 161010,
+    "fn": 22887,
+    "tp": 168937,
+    "accuracy": 0.5157126040550185,
+    "ppv": 0.512012535346586,
+    "ap_paper_ppv": 0.5111952906126572,
+    "recall": 0.880687505213112,
+    "specificity": 0.14312171705614066,
+    "f1": 0.6475522786816439,
+    "npv": 0.5402370429891523
+  },
+  "full_set_unprocessable_as_negative": {
+    "n": 398828,
+    "tn": 38404,
+    "fp": 161010,
+    "fn": 30477,
+    "tp": 168937,
+    "accuracy": 0.5198757359062052,
+    "ppv": 0.512012535346586,
+    "ap_paper_ppv": 0.5101766259332152,
+    "recall": 0.8471671998956943,
+    "specificity": 0.19258427191671598,
+    "f1": 0.6382676472199501,
+    "npv": 0.5575412668224909
+  }
+}
