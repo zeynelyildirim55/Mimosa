@@ -7,7 +7,7 @@ import torch
 
 
 from sklearn.metrics import recall_score,f1_score
-from sklearn.metrics import accuracy_score,average_precision_score
+from sklearn.metrics import accuracy_score,precision_score,average_precision_score
 from torch.utils.data import DataLoader
 from torch.utils.data import Dataset
 
@@ -186,7 +186,8 @@ def Deep_validate(model, dataloader, criterion):
 
 
         acc = accuracy_score(all_targets, all_predictions)
-        pre = average_precision_score(all_targets, all_predictions)
+        pre = precision_score(all_targets, all_predictions)
+        ap = average_precision_score(all_targets, all_predictions)
         recall = recall_score(all_targets,all_predictions)
         spec = specificity_score(all_targets,all_predictions)
         f1 = f1_score(all_targets,all_predictions)
@@ -197,6 +198,7 @@ def Deep_validate(model, dataloader, criterion):
 
         print('acc',acc)
         print('pre',pre)
+        print('ap (reported as PPV in the paper)',ap)
         print('recall',recall)
         print('specificity',spec)
         print('f1',f1)
@@ -215,11 +217,10 @@ def Deep_validate(model, dataloader, criterion):
 
 
 
-def perform_train(filepath):
+def perform_train(filepath, epochs=40):
     # train positive: 26995, train negative: 27469, val positive: 2193, val negative: 2136
     batchsize = 256
     learningrate = 1e-4
-    epochs = 40
     train, val = read_data(filepath)
 
     train_dataset = myDataset(train)
@@ -245,7 +246,7 @@ def perform_train(filepath):
         print('Val Loss:',valid_epoch_loss)
         if valid_epoch_loss < best_val_loss:
             best_val_loss = valid_epoch_loss
-            # torch.save(model,'model_concate_{}.pth'.format(epoch))
+            torch.save(model,'model_concate_{}.pth'.format(epoch))
 
 
 
@@ -318,55 +319,83 @@ def perform_test(pathfile,stepsize):
     test = read_test(pathfile)
     y_true = []
     y_pred = []
-    model = torch.load('model_mimosa.pth')
+    model_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'model_mimosa.pth')
+    model = torch.load(model_path, map_location=torch.device('cpu'))
 
     print('个数',len(test))
 
     for index in range(len(test)): #range(len(test))
         fasta = test[index]
 
-
         mirna = fasta[0].upper().replace('T', 'U')
-
         mrna = fasta[1].upper().replace('T', 'U')
         reverse_mrna = reverse_seq(mrna)
         y_true.append(fasta[2])
 
-
-        kmers = get_cts(reverse_mrna,stepsize)
+        kmers = get_cts(reverse_mrna, stepsize)
 
         if kmers is None:
             pre = 0
             y_pred.append(pre)
-
         else:
-
             pre = kmers_predict(kmers, mirna, model)
             y_pred.append(pre)
 
-    print(y_true)
-    print(y_pred)
+        if (index + 1) % 50 == 0 or (index + 1) == len(test):
+            print(f'Progress: {index + 1}/{len(test)} pairs processed...', flush=True)
+
+    print('True labels:', y_true)
+    print('Predictions:', y_pred)
     acc = accuracy_score(y_true, y_pred)
-    pre = average_precision_score(y_true, y_pred)
+    pre = precision_score(y_true, y_pred)
+    ap = average_precision_score(y_true, y_pred)
     recall = recall_score(y_true, y_pred)
     spec = specificity_score(y_true, y_pred)
     f1 = f1_score(y_true, y_pred)
     auc = NPV(y_true, y_pred)
 
-    print('acc', acc)
-    print('PPV', pre)
-    print('recall', recall)
-    print('specificity', spec)
-    print('f1', f1)
-    print('NPV', auc)
+    print('=== Test Evaluation Results ===', flush=True)
+    print(f'Accuracy:    {acc:.4f}', flush=True)
+    print(f'PPV (Prec):  {pre:.4f}', flush=True)
+    print(f'AP (paper PPV): {ap:.4f}', flush=True)
+    print(f'Recall:      {recall:.4f}', flush=True)
+    print(f'Specificity: {spec:.4f}', flush=True)
+    print(f'F1 Score:    {f1:.4f}', flush=True)
+    print(f'NPV:         {auc:.4f}', flush=True)
 
 
 
-path = '/your/path/to/Mimosa'
-train_dataset_path = path + '/Data/miRAW_Train_Validation.txt'
-test_dataset_path = path + '/Data/miRAW_Test0.txt'
-perform_train(train_dataset_path)
-perform_test(test_dataset_path, stepsize=1)
+if __name__ == '__main__':
+    import argparse
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    default_train = os.path.join(base_dir, 'data', 'miRAW_Train_Validation.txt')
+    default_test = os.path.join(base_dir, 'data', 'miRAW_Test0.txt')
+
+    parser = argparse.ArgumentParser(description='Mimosa Model Training & Testing')
+    parser.add_argument('--mode', type=str, default='test', choices=['test', 'train'],
+                        help='Mode to run: test (default) or train')
+    parser.add_argument('--data', type=str, default=None,
+                        help='Path to dataset file. Defaults to miRAW_Test0.txt for test, miRAW_Train_Validation.txt for train')
+    parser.add_argument('--stepsize', type=int, default=5,
+                        help='Window step size for segmentation (default: 5)')
+    parser.add_argument('--epochs', type=int, default=40,
+                        help='Number of training epochs (default: 40, as in the paper)')
+    parser.add_argument('--threads', type=int, default=8,
+                        help='Number of PyTorch CPU threads (default: 8)')
+
+    args = parser.parse_args()
+
+    if args.threads:
+        torch.set_num_threads(args.threads)
+
+    if args.mode == 'train':
+        data_path = args.data if args.data else default_train
+        print(f'Starting training with {data_path}...', flush=True)
+        perform_train(data_path, epochs=args.epochs)
+    else:
+        data_path = args.data if args.data else default_test
+        print(f'Starting testing on {data_path} with stepsize={args.stepsize}...', flush=True)
+        perform_test(data_path, stepsize=args.stepsize)
 
 
 
