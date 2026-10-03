@@ -8,7 +8,7 @@
 
 # Gene-level test with the original sliding-window procedure (step size 5), one shard per task:
 #   MODEL=runs/site40_long/model_concate_112.pth SPLIT=test_unseen_pair NSHARDS=40 \
-#     sbatch --array=0-39 --export=ALL,MODEL,SPLIT,NSHARDS scripts/run_predict_site40.slurm
+#     sbatch --array=0-39 --export=ALL,MODEL,SPLIT,NSHARDS archive/scripts/run_predict_site40.slurm
 # Then the same script with MERGE=1 combines the shards and writes the metrics.
 source ~/miniconda3/etc/profile.d/conda.sh
 conda activate mimosa

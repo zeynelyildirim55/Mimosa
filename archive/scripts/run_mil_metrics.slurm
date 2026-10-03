@@ -7,7 +7,7 @@
 #SBATCH --time=01:00:00
 
 # Gene-level metrics of a finished selection directory; fails if chunks are missing.
-#   OUT=runs/mil_scratch/test/test_unseen_pair PAIRS=data/custom/pairs_test_unseen_pair.tsv NCHUNKS=40 sbatch ... scripts/run_mil_metrics.slurm
+#   OUT=runs/mil_scratch/test/test_unseen_pair PAIRS=data/custom/pairs_test_unseen_pair.tsv NCHUNKS=40 sbatch ... archive/scripts/run_mil_metrics.slurm
 source ~/miniconda3/etc/profile.d/conda.sh
 conda activate mimosa
 ROOT=$HOME/Mimosa

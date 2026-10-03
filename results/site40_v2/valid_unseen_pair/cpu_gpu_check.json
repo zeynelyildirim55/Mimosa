@@ -1,0 +1,10 @@
+{
+  "cpu_rows": 11281,
+  "gpu_rows": 11281,
+  "common_rows": 11281,
+  "only_cpu": 0,
+  "only_gpu": 0,
+  "label_mismatch": 0,
+  "decision_differences": 0,
+  "differences": []
+}

@@ -3,7 +3,7 @@
 Training rows (training_chunks):
   1. keep rna-rna rows with RNA_type=miRNA and target_RNA_type=mRNA
   2. deduplicate on (miRNA id, target id, label)
-  3. resolve sequences from rna.fa (read directly from the zip, T -> U)
+  3. resolve sequences from ~/fasta_files/rna.fa (T -> U)
   4. drop rows with a missing or non-ACGU sequence, a miRNA outside
      [--min-mirna-len, --max-mirna-len], a target shorter than 40 nt,
      a pair that occurs with both labels, or a pair that also occurs in a valid/test split
@@ -26,14 +26,12 @@ Outputs (in --out-dir):
 import argparse
 import collections
 import glob
-import io
 import json
 import os
 import random
 import re
 import sys
 import time
-import zipfile
 
 RAW_SEQ = re.compile(r'^[ACGTUacgtu]+$')
 RNA_ALPHABET = set('ACGU')
@@ -109,14 +107,14 @@ def load_eval_rows(path, limit, report):
     return rows
 
 
-def load_sequences(zip_path, member, needed):
-    '''stream a fasta file from the zip and keep only the ids in `needed`.
+def load_sequences(fasta_path, needed):
+    '''stream a fasta file and keep only the ids in `needed`.
     Prefixed headers such as "miRBase:MIMAT0000062" also match their bare id;
     an exact header match always wins.'''
     exact, bare = {}, {}
-    with zipfile.ZipFile(zip_path) as z, z.open(member) as raw:
+    with open(fasta_path, encoding='utf-8') as raw:
         store, key, buf = None, None, []
-        for line in io.TextIOWrapper(raw, encoding='utf-8'):
+        for line in raw:
             if line.startswith('>'):
                 if store is not None:
                     store.setdefault(key, to_rna(''.join(buf)))
@@ -237,7 +235,7 @@ def main():
     parser = argparse.ArgumentParser(description='Prepare the custom dataset for Mimosa')
     parser.add_argument('--chunks-dir', default=os.path.join(home, 'training_chunks'))
     parser.add_argument('--eval-dir', default=os.path.join(home, 'data_with_negatives', 'rna_rna', 'miRNA_mRNA'))
-    parser.add_argument('--fasta-zip', default=os.path.join(home, 'fasta_files.zip'))
+    parser.add_argument('--fasta', default=os.path.join(home, 'fasta_files', 'rna.fa'))
     parser.add_argument('--out-dir', default=os.path.join(base_dir, 'data', 'custom'))
     parser.add_argument('--val-frac', type=float, default=0.07)
     parser.add_argument('--seed', type=int, default=42)
@@ -266,7 +264,7 @@ def main():
     needed = {i for k in train_rows for i in k[:2] if not is_raw_seq(i)}
     needed |= {i for rows in eval_rows.values() for r in rows for i in r[1:3] if not is_raw_seq(i)}
     log(f'streaming rna.fa for {len(needed)} ids')
-    seqs = load_sequences(args.fasta_zip, 'rna.fa', needed)
+    seqs = load_sequences(args.fasta, needed)
     report['ids_needed'] = len(needed)
     report['ids_resolved'] = len(seqs)
     log(f'resolved {len(seqs)} of {len(needed)} ids')

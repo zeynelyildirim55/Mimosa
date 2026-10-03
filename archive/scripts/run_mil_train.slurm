@@ -9,7 +9,7 @@
 
 # One MIL round: train one epoch on ROUND_DIR/selection_train (unless SKIP_TRAIN=1), then score the
 # validation subset and write ROUND_DIR/val_metrics.json.
-#   MODEL_IN=... ROUND_DIR=runs/mil/round1 OPT_IN=... sbatch --export=ALL,MODEL_IN,ROUND_DIR,OPT_IN scripts/run_mil_train.slurm
+#   MODEL_IN=... ROUND_DIR=runs/mil/round1 OPT_IN=... sbatch --export=ALL,MODEL_IN,ROUND_DIR,OPT_IN archive/scripts/run_mil_train.slurm
 source ~/miniconda3/etc/profile.d/conda.sh
 conda activate mimosa
 ROOT=$HOME/Mimosa

@@ -8,7 +8,7 @@
 
 # Waits for an idle RTX 4090 on this node and uses it to help with whichever MIL round is currently
 # selecting (chunks are claimed, so it shares the work with the gpu1 job). Idles between checks.
-#   FIRST_ROUND=7 LAST_ROUND=9 sbatch --array=1-3%1 --export=ALL,FIRST_ROUND,LAST_ROUND scripts/run_mil_helper.slurm
+#   FIRST_ROUND=7 LAST_ROUND=9 sbatch --array=1-3%1 --export=ALL,FIRST_ROUND,LAST_ROUND archive/scripts/run_mil_helper.slurm
 source ~/miniconda3/etc/profile.d/conda.sh
 conda activate mimosa
 ROOT=$HOME/Mimosa

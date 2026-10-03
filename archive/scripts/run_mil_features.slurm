@@ -7,7 +7,7 @@
 #SBATCH --time=12:00:00
 
 # Window features for the MIL experiment, one shard per array task:
-#   PAIRS=... NAME=train SPLIT=train NSHARDS=200 sbatch --array=0-199%50 --export=ALL,PAIRS,NAME,SPLIT,NSHARDS,EVERY scripts/run_mil_features.slurm
+#   PAIRS=... NAME=train SPLIT=train NSHARDS=200 sbatch --array=0-199%50 --export=ALL,PAIRS,NAME,SPLIT,NSHARDS,EVERY archive/scripts/run_mil_features.slurm
 source ~/miniconda3/etc/profile.d/conda.sh
 conda activate mimosa
 export OMP_NUM_THREADS=1 MKL_NUM_THREADS=1

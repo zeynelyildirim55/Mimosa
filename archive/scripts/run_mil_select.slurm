@@ -8,7 +8,7 @@
 
 # Scores all windows with MODEL and keeps each pair's best window; one worker per idle GPU on the
 # node. Workers share OUT through chunk claims, so several jobs (other nodes, restarts) can help.
-#   MODEL=... PAIRS=... FEATURES=... OUT=... NCHUNKS=400 sbatch --export=ALL,MODEL,PAIRS,FEATURES,OUT,NCHUNKS scripts/run_mil_select.slurm
+#   MODEL=... PAIRS=... FEATURES=... OUT=... NCHUNKS=400 sbatch --export=ALL,MODEL,PAIRS,FEATURES,OUT,NCHUNKS archive/scripts/run_mil_select.slurm
 source ~/miniconda3/etc/profile.d/conda.sh
 conda activate mimosa
 ROOT=$HOME/Mimosa
